@@ -3,11 +3,18 @@ import { useState } from "react";
 function App() {
   const [todo, setTodo] = useState("");
   const [todoNew, setTodoNew] = useState([]);
+  const [todoComplete, setTodoComplete] = useState([]);
+  // const [condition, setCondion] = useState(true);
+  // let condition = false;
 
   function hundleTodosInFormComponet(e) {
     e.preventDefault();
-    todoNew.push({ task: todo, addB: "TIC", remB: "EX" });
+    todoNew.push({ task: todo, addB: "TIC", remB: "EX", state: false });
+
     setTodo("");
+  }
+  function pushToComplete() {
+    todoNew.map((el) => el.state === true);
   }
 
   return (
@@ -17,7 +24,8 @@ function App() {
         onSetTodo={setTodo}
         onHundleTodosInFormComponet={hundleTodosInFormComponet}
       />
-      <NewToDos onNewTodos={todoNew} />
+      <NewToDos onNewTodos={todoNew} hundlePushToComplete={pushToComplete} />
+      <CompletedTodos onTodoComplete={todoComplete} onNewTodos={todoNew} />
     </div>
   );
 }
@@ -37,17 +45,32 @@ function FormTodo({ onTodo, onSetTodo, onHundleTodosInFormComponet }) {
     </div>
   );
 }
-function NewToDos({ onNewTodos }) {
+function NewToDos({ onNewTodos, hundlePushToComplete }) {
   return (
-    <ul>
-      {onNewTodos.map((el) => (
-        <li key={el.task}>
-          {el.task}
-          <button>{el.addB}</button>
-          <button>{el.remB}</button>
-        </li>
-      ))}
-    </ul>
+    <div>
+      <h1 className="todotype">New todos</h1>
+      <ul>
+        {onNewTodos.map((el) => (
+          <li key={el.task}>
+            {el.task}
+            <button onClick={hundlePushToComplete}>{el.addB}</button>
+            <button>{el.remB}</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+function CompletedTodos({ onTodoComplete, onCondition, onNewTodos }) {
+  return (
+    <div>
+      <h1 className="todotype">Completed todos</h1>
+      <ul>
+        {onNewTodos.map((el) =>
+          el.state === true ? <li key={el.task}>{el.task}</li> : ""
+        )}
+      </ul>
+    </div>
   );
 }
 
