@@ -3,20 +3,37 @@ import { useState } from "react";
 function App() {
   const [todo, setTodo] = useState("");
   const [todoNew, setTodoNew] = useState([]);
-  const [todoComplete, setTodoComplete] = useState([]);
-  // const [condition, setCondion] = useState(true);
-  // let condition = false;
-
   function hundleTodosInFormComponet(e) {
     e.preventDefault();
-    todoNew.push({ task: todo, addB: "TIC", remB: "EX", state: false });
+    todoNew.push({
+      task: todo,
+      addB: "TIC",
+      remB: "EX",
+      id: Date.now(),
+      state: false,
+      cancel: false,
+    });
 
     setTodo("");
   }
-  function pushToComplete() {
-    todoNew.map((el) => el.state === true);
+  function toggleState(id) {
+    setTodoNew(
+      todoNew.map((el) =>
+        el.id === id ? { ...el, state: true, complete: false } : el
+      )
+    );
   }
-
+  function moveToCancelled(id) {
+    setTodoNew(
+      todoNew.map((el) => (el.id === id ? { ...el, complete: true } : el))
+    );
+  }
+  function redoTodos() {
+    todoNew.map((el) => (el ? { ...el, id: Date.now(), state: false } : el));
+  }
+  function cancelAllTodos(id) {
+    todoNew.map((el) => (el.id === id ? { ...el, cancel: true } : el));
+  }
   return (
     <div>
       <FormTodo
@@ -24,8 +41,18 @@ function App() {
         onSetTodo={setTodo}
         onHundleTodosInFormComponet={hundleTodosInFormComponet}
       />
-      <NewToDos onNewTodos={todoNew} hundlePushToComplete={pushToComplete} />
-      <CompletedTodos onTodoComplete={todoComplete} onNewTodos={todoNew} />
+      <div className="bord">
+        <NewToDos
+          onNewTodos={todoNew}
+          hundleToggleState={toggleState}
+          onHundleCancelAllTodos={cancelAllTodos}
+        />
+        <CompletedTodos
+          onNewTodos={todoNew}
+          onHundleMoveToCancelled={moveToCancelled}
+        />
+        <CancelledTodos onNewTodos={todoNew} onHundleRedoTodos={redoTodos} />
+      </div>
     </div>
   );
 }
@@ -45,29 +72,72 @@ function FormTodo({ onTodo, onSetTodo, onHundleTodosInFormComponet }) {
     </div>
   );
 }
-function NewToDos({ onNewTodos, hundlePushToComplete }) {
+function NewToDos({ onNewTodos, hundleToggleState, onHundleCancelAllTodos }) {
   return (
     <div>
       <h1 className="todotype">New todos</h1>
       <ul>
-        {onNewTodos.map((el) => (
-          <li key={el.task}>
-            {el.task}
-            <button onClick={hundlePushToComplete}>{el.addB}</button>
-            <button>{el.remB}</button>
-          </li>
-        ))}
+        {onNewTodos.map(
+          (el) =>
+            el.state === false && (
+              <li key={el.task}>
+                {el.task}
+                <button onClick={() => hundleToggleState(el.id)}>
+                  {el.addB}
+                </button>
+                <button onClick={() => onHundleCancelAllTodos(el.id)}>
+                  {el.remB}
+                </button>
+              </li>
+            )
+        )}
       </ul>
     </div>
   );
 }
-function CompletedTodos({ onTodoComplete, onCondition, onNewTodos }) {
+function CompletedTodos({ onNewTodos, onHundleMoveToCancelled }) {
   return (
     <div>
       <h1 className="todotype">Completed todos</h1>
       <ul>
+        {onNewTodos.map(
+          (el) =>
+            el.state &&
+            !el.complete && (
+              <li key={el.task}>
+                {el.task}
+                <button onClick={() => onHundleMoveToCancelled(el.id)}>
+                  {el.addB}
+                </button>
+                <button>{el.remB}</button>
+              </li>
+            )
+        )}
+      </ul>
+    </div>
+  );
+}
+function CancelledTodos({ onNewTodos, onHundleRedoTodos }) {
+  return (
+    <div>
+      <h1>Cancelled todos</h1>
+      <ul>
         {onNewTodos.map((el) =>
-          el.state === true ? <li key={el.task}>{el.task}</li> : ""
+          el.complete ? (
+            <li>
+              {el.task}
+              <button onClick={onHundleRedoTodos}>{el.addB}</button>
+              <button>{el.remB}</button>
+            </li>
+          ) : (
+            el.cancel && (
+              <li>
+                {el.task}
+                <button>{el.addB}</button>
+                <button>{el.remB}</button>
+              </li>
+            )
+          )
         )}
       </ul>
     </div>
