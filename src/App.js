@@ -11,11 +11,11 @@ function App() {
       remB: "EX",
       id: Date.now(),
       state: false,
-      cancel: false,
+      cancelTodo: true,
     });
-
     setTodo("");
   }
+
   function toggleState(id) {
     setTodoNew(
       todoNew.map((el) =>
@@ -28,12 +28,17 @@ function App() {
       todoNew.map((el) => (el.id === id ? { ...el, complete: true } : el))
     );
   }
-  function redoTodos() {
-    todoNew.map((el) => (el ? { ...el, id: Date.now(), state: false } : el));
+
+  function deleteCancelledTodos(id) {
+    setTodoNew(
+      todoNew.map((el) => {
+        const index = todoNew.indexOf(el);
+        todoNew.splice(index, 1);
+        console.log(todoNew);
+      })
+    );
   }
-  function cancelAllTodos(id) {
-    todoNew.map((el) => (el.id === id ? { ...el, cancel: true } : el));
-  }
+
   return (
     <div>
       <FormTodo
@@ -42,16 +47,15 @@ function App() {
         onHundleTodosInFormComponet={hundleTodosInFormComponet}
       />
       <div className="bord">
-        <NewToDos
-          onNewTodos={todoNew}
-          hundleToggleState={toggleState}
-          onHundleCancelAllTodos={cancelAllTodos}
-        />
+        <NewToDos onNewTodos={todoNew} hundleToggleState={toggleState} />
         <CompletedTodos
           onNewTodos={todoNew}
           onHundleMoveToCancelled={moveToCancelled}
         />
-        <CancelledTodos onNewTodos={todoNew} onHundleRedoTodos={redoTodos} />
+        <CancelledTodos
+          onNewTodos={todoNew}
+          onHundleDeleteCancelledTodos={deleteCancelledTodos}
+        />
       </div>
     </div>
   );
@@ -72,7 +76,7 @@ function FormTodo({ onTodo, onSetTodo, onHundleTodosInFormComponet }) {
     </div>
   );
 }
-function NewToDos({ onNewTodos, hundleToggleState, onHundleCancelAllTodos }) {
+function NewToDos({ onNewTodos, hundleToggleState }) {
   return (
     <div>
       <h1 className="todotype">New todos</h1>
@@ -84,9 +88,6 @@ function NewToDos({ onNewTodos, hundleToggleState, onHundleCancelAllTodos }) {
                 {el.task}
                 <button onClick={() => hundleToggleState(el.id)}>
                   {el.addB}
-                </button>
-                <button onClick={() => onHundleCancelAllTodos(el.id)}>
-                  {el.remB}
                 </button>
               </li>
             )
@@ -109,7 +110,6 @@ function CompletedTodos({ onNewTodos, onHundleMoveToCancelled }) {
                 <button onClick={() => onHundleMoveToCancelled(el.id)}>
                   {el.addB}
                 </button>
-                <button>{el.remB}</button>
               </li>
             )
         )}
@@ -117,27 +117,22 @@ function CompletedTodos({ onNewTodos, onHundleMoveToCancelled }) {
     </div>
   );
 }
-function CancelledTodos({ onNewTodos, onHundleRedoTodos }) {
+function CancelledTodos({ onNewTodos, onHundleDeleteCancelledTodos }) {
   return (
     <div>
       <h1>Cancelled todos</h1>
       <ul>
-        {onNewTodos.map((el) =>
-          el.complete ? (
-            <li>
-              {el.task}
-              <button onClick={onHundleRedoTodos}>{el.addB}</button>
-              <button>{el.remB}</button>
-            </li>
-          ) : (
-            el.cancel && (
-              <li>
+        {onNewTodos.map(
+          (el) =>
+            el.complete &&
+            el.cancelTodo && (
+              <li key={el.task}>
                 {el.task}
-                <button>{el.addB}</button>
-                <button>{el.remB}</button>
+                <button onClick={() => onHundleDeleteCancelledTodos(el.id)}>
+                  {el.remB}
+                </button>
               </li>
             )
-          )
         )}
       </ul>
     </div>
