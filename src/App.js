@@ -1,140 +1,6 @@
 import { useState } from "react";
 /*
-function App() {
-  const [todo, setTodo] = useState("");
-  const [todoNew, setTodoNew] = useState([]);
-  function hundleTodosInFormComponet(e) {
-    e.preventDefault();
-    todoNew.push({
-      task: todo,
-      addB: "TIC",
-      remB: "EX",
-      id: Date.now(),
-      state: false,
-      cancelTodo: true,
-    });
-    setTodo("");
-  }
 
-  function toggleState(id) {
-    setTodoNew(
-      todoNew.map((el) =>
-        el.id === id ? { ...el, state: true, complete: false } : el
-      )
-    );
-  }
-  function moveToCancelled(id) {
-    setTodoNew(
-      todoNew.map((el) => (el.id === id ? { ...el, complete: true } : el))
-    );
-  }
-
-  function deleteCancelledTodos(id) {
-    setTodoNew(
-      todoNew.map((el) => {
-        const index = todoNew.indexOf(el);
-        todoNew.splice(index, 1);
-        console.log(todoNew);
-      })
-    );
-  }
-
-  return (
-    <div>
-      <FormTodo
-        onTodo={todo}
-        onSetTodo={setTodo}
-        onHundleTodosInFormComponet={hundleTodosInFormComponet}
-      />
-      <div className="bord">
-        <NewToDos onNewTodos={todoNew} hundleToggleState={toggleState} />
-        <CompletedTodos
-          onNewTodos={todoNew}
-          onHundleMoveToCancelled={moveToCancelled}
-        />
-        <CancelledTodos
-          onNewTodos={todoNew}
-          onHundleDeleteCancelledTodos={deleteCancelledTodos}
-        />
-      </div>
-      <Apps onNewTod={todoNew} />
-    </div>
-  );
-}
-function FormTodo({ onTodo, onSetTodo, onHundleTodosInFormComponet }) {
-  return (
-    <div>
-      <h1 className="todoname">The react todo app</h1>
-      <form className="todoform" onSubmit={onHundleTodosInFormComponet}>
-        <input
-          type="text"
-          value={onTodo}
-          onChange={(e) => onSetTodo(e.target.value)}
-          placeholder="Pleaase input task"
-        />
-        <button>ADD</button>
-      </form>
-    </div>
-  );
-}
-function NewToDos({ onNewTodos, hundleToggleState }) {
-  return (
-    <div>
-      <h1 className="todotype">New todos</h1>
-      <ul>
-        {onNewTodos.map((el) => (
-          // el.state === false &&
-          <li key={el.task}>
-            {el.task}
-            <button onClick={() => hundleToggleState(el.id)}>{el.addB}</button>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-function CompletedTodos({ onNewTodos, onHundleMoveToCancelled }) {
-  return (
-    <div>
-      <h1 className="todotype">Completed todos</h1>
-      <ul>
-        {onNewTodos.map(
-          (el) =>
-            el.state &&
-            !el.complete && (
-              <li key={el.task}>
-                {el.task}
-                <button onClick={() => onHundleMoveToCancelled(el.id)}>
-                  {el.addB}
-                </button>
-              </li>
-            )
-        )}
-      </ul>
-    </div>
-  );
-}
-function CancelledTodos({ onNewTodos, onHundleDeleteCancelledTodos }) {
-  return (
-    <div>
-      <h1>Cancelled todos</h1>
-      <ul>
-        {onNewTodos.map(
-          (el) =>
-            el.complete &&
-            el.cancelTodo && (
-              <li key={el.task}>
-                {el.task}
-                <button onClick={() => onHundleDeleteCancelledTodos(el.id)}>
-                  {el.remB}
-                </button>
-              </li>
-            )
-        )}
-      </ul>
-    </div>
-  );
-}
 */
 function App() {
   const [todo, setTodo] = useState("");
@@ -146,26 +12,54 @@ function App() {
     todoNew.push({
       task: todo,
       addB: "TIC",
+      remB: "EX",
       id: Date.now(),
       state: false,
     });
     setTodo("");
   }
+  function pushToCancelledFromNew() {
+    setTodoNew(() =>
+      todoNew.map((el) => {
+        const index = todoNew.indexOf(el);
+        todoNew.splice(index);
+        todoCancelled.push(el);
+      })
+    );
+  }
   function pushToComplete() {
     setTodoNew(() =>
       todoNew.map((el) => {
         const index = todoNew.indexOf(el);
-        todoNew.splice(index, 1);
+        todoNew.splice(index);
         todoComplete.push(el);
       })
     );
   }
+
   function pushToCancelled() {
     setTodoComplete(() =>
       todoComplete.map((el) => {
         const index = todoComplete.indexOf(el);
-        todoComplete.splice(index, 1);
+        todoComplete.splice(index);
         todoCancelled.push(el);
+      })
+    );
+  }
+  function redoTodo() {
+    setTodoCancelled(() =>
+      todoCancelled.map((el) => {
+        const index = todoCancelled.indexOf(el);
+        todoCancelled.splice(index);
+        todoNew.push(el);
+      })
+    );
+  }
+  function deleteTodo() {
+    setTodoCancelled(() =>
+      todoCancelled.map((el) => {
+        const index = todoCancelled.indexOf(el);
+        todoCancelled.splice(index);
       })
     );
   }
@@ -176,12 +70,22 @@ function App() {
         onSetTodo={setTodo}
         onPushToNewTodos={hundleTodosInFormComponet}
       />
-      <NewTasks onTodoNew={todoNew} onPushToComplete={pushToComplete} />
-      <CompleteTasks
-        onCompleteTask={todoComplete}
-        onPushToCancelled={pushToCancelled}
-      />
-      <CancelledTodos onCancelled={todoCancelled} />
+      <div className="bord">
+        <NewTasks
+          onTodoNew={todoNew}
+          onPushToComplete={pushToComplete}
+          onPushToCancelledFromNew={pushToCancelledFromNew}
+        />
+        <CompleteTasks
+          onCompleteTask={todoComplete}
+          onPushToCancelled={pushToCancelled}
+        />
+        <CancelledTodos
+          onCancelled={todoCancelled}
+          onRedoTodo={redoTodo}
+          onDeleteTodo={deleteTodo}
+        />
+      </div>
     </div>
   );
 }
@@ -199,8 +103,7 @@ function Form({ onTodo, onSetTodo, onPushToNewTodos }) {
   );
 }
 
-function NewTasks({ onTodoNew, onPushToComplete }) {
-  // console.log(onNewTod)
+function NewTasks({ onTodoNew, onPushToComplete, onPushToCancelledFromNew }) {
   return (
     <div>
       <h1>new todos</h1>
@@ -209,6 +112,7 @@ function NewTasks({ onTodoNew, onPushToComplete }) {
           <li key={el.id}>
             {el.task}
             <button onClick={onPushToComplete}>{el.addB}</button>
+            <button onClick={onPushToCancelledFromNew}>{el.remB}</button>
           </li>
         ))}
       </ul>
@@ -224,13 +128,14 @@ function CompleteTasks({ onCompleteTask, onPushToCancelled }) {
           <li key={el.task}>
             {el.task}
             <button onClick={onPushToCancelled}>{el.addB}</button>
+            <button onClick={onPushToCancelled}>{el.remB}</button>
           </li>
         ))}
       </ul>
     </div>
   );
 }
-function CancelledTodos({ onCancelled }) {
+function CancelledTodos({ onCancelled, onRedoTodo, onDeleteTodo }) {
   return (
     <div>
       <h1>Cancelled todos</h1>
@@ -238,7 +143,8 @@ function CancelledTodos({ onCancelled }) {
         {onCancelled.map((el) => (
           <li key={el.task}>
             {el.task}
-            <button>{el.addB}</button>
+            <button onClick={onRedoTodo}>{el.addB}</button>
+            <button onClick={onDeleteTodo}>{el.remB}</button>
           </li>
         ))}
       </ul>
