@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+/*
 function App() {
   const [todo, setTodo] = useState("");
   const [todoNew, setTodoNew] = useState([]);
@@ -57,6 +57,7 @@ function App() {
           onHundleDeleteCancelledTodos={deleteCancelledTodos}
         />
       </div>
+      <Apps onNewTod={todoNew} />
     </div>
   );
 }
@@ -81,17 +82,13 @@ function NewToDos({ onNewTodos, hundleToggleState }) {
     <div>
       <h1 className="todotype">New todos</h1>
       <ul>
-        {onNewTodos.map(
-          (el) =>
-            el.state === false && (
-              <li key={el.task}>
-                {el.task}
-                <button onClick={() => hundleToggleState(el.id)}>
-                  {el.addB}
-                </button>
-              </li>
-            )
-        )}
+        {onNewTodos.map((el) => (
+          // el.state === false &&
+          <li key={el.task}>
+            {el.task}
+            <button onClick={() => hundleToggleState(el.id)}>{el.addB}</button>
+          </li>
+        ))}
       </ul>
     </div>
   );
@@ -138,5 +135,114 @@ function CancelledTodos({ onNewTodos, onHundleDeleteCancelledTodos }) {
     </div>
   );
 }
+*/
+function App() {
+  const [todo, setTodo] = useState("");
+  const [todoNew, setTodoNew] = useState([]);
+  const [todoComplete, setTodoComplete] = useState([]);
+  const [todoCancelled, setTodoCancelled] = useState([]);
+  function hundleTodosInFormComponet(e) {
+    e.preventDefault();
+    todoNew.push({
+      task: todo,
+      addB: "TIC",
+      id: Date.now(),
+      state: false,
+    });
+    setTodo("");
+  }
+  function pushToComplete() {
+    setTodoNew(() =>
+      todoNew.map((el) => {
+        const index = todoNew.indexOf(el);
+        todoNew.splice(index, 1);
+        todoComplete.push(el);
+      })
+    );
+  }
+  function pushToCancelled() {
+    setTodoComplete(() =>
+      todoComplete.map((el) => {
+        const index = todoComplete.indexOf(el);
+        todoComplete.splice(index, 1);
+        todoCancelled.push(el);
+      })
+    );
+  }
+  return (
+    <div>
+      <Form
+        onTodo={todo}
+        onSetTodo={setTodo}
+        onPushToNewTodos={hundleTodosInFormComponet}
+      />
+      <NewTasks onTodoNew={todoNew} onPushToComplete={pushToComplete} />
+      <CompleteTasks
+        onCompleteTask={todoComplete}
+        onPushToCancelled={pushToCancelled}
+      />
+      <CancelledTodos onCancelled={todoCancelled} />
+    </div>
+  );
+}
+function Form({ onTodo, onSetTodo, onPushToNewTodos }) {
+  return (
+    <form onSubmit={onPushToNewTodos}>
+      <h1>todo new version</h1>
+      <input
+        type="text"
+        value={onTodo}
+        onChange={(e) => onSetTodo(e.target.value)}
+      />
+      <button>ADD</button>
+    </form>
+  );
+}
 
+function NewTasks({ onTodoNew, onPushToComplete }) {
+  // console.log(onNewTod)
+  return (
+    <div>
+      <h1>new todos</h1>
+      <ul>
+        {onTodoNew.map((el) => (
+          <li key={el.id}>
+            {el.task}
+            <button onClick={onPushToComplete}>{el.addB}</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+function CompleteTasks({ onCompleteTask, onPushToCancelled }) {
+  return (
+    <div>
+      <h1>complete todos</h1>
+      <ul>
+        {onCompleteTask.map((el) => (
+          <li key={el.task}>
+            {el.task}
+            <button onClick={onPushToCancelled}>{el.addB}</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+function CancelledTodos({ onCancelled }) {
+  return (
+    <div>
+      <h1>Cancelled todos</h1>
+      <ul>
+        {onCancelled.map((el) => (
+          <li key={el.task}>
+            {el.task}
+            <button>{el.addB}</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 export default App;
