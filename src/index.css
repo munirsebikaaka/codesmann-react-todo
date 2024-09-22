@@ -1,4 +1,131 @@
+:root {
+  --background-color: #e0e0e0;
+  --border-color: #dbe0eb;
+  --hover-color: #87f0ea;
+  --primary-color: #0bdacf;
+  --secondary-color: #e5faee;
+  --unknown-color: #008d3b;
+  --errorbackgroung-color: #fff0f0;
+  --errorword-color: #e40000;
+
+  --bg-white: #fff;
+  --tw-shadow-color: rgb(59 130 246 / 0.5);
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color),
+    0 2px 4px -2px var(--tw-shadow-color);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --successBg: #e5faee;
+  --successText: #008d3b;
+  --errorBg: #fff0f0;
+  --errorText: #e40000;
+}
+
 .bord {
   display: flex;
   justify-content: space-between;
+}
+.todo-form {
+  width: 100%;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid red;
+}
+.type-input {
+  width: 100%;
+  /* display: inline-block; */
+  border: 1px solid #eeeded;
+  font-size: 0.8rem;
+  /* text-align: center;
+     */
+  padding: 12px;
+  border-radius: 6px;
+}
+.type-input:focus {
+  outline: none;
+}
+
+.todobtn {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  padding: 8px;
+  border: none;
+}
+.todobtn:hover {
+  background-color: var(--hover-color);
+  transition: all 0.3s;
+}
+.heading {
+  padding: 8px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 500;
+  margin-bottom: 8px;
+  font-family: sans-serif;
+  text-transform: capitalize;
+}
+
+.heading-1 {
+  background-color: aliceblue;
+  color: #000;
+}
+.heading-2 {
+  background-color: var(--successBg);
+  color: var(--successText);
+}
+.heading-3 {
+  background-color: var(--errorBg);
+  color: var(--errorText);
+}
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 10px;
+  margin-right: 50px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+}
+li div {
+  display: flex;
+  gap: 10px;
+}
+.level-cell {
+  background-color: var(--bg-white);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  padding: 20px;
+  width: 100%;
+}
+.btn {
+  display: inline-block;
+  font-size: 1.6rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 5px 5px;
+  border-radius: 6px;
+}
+.btn-1 {
+  background-color: var(--primary-color);
+  color: var(--bg-white);
+  border: 1px solid transparent;
+}
+.btn-1:hover {
+  background-color: var(--primary-color);
+  opacity: 0.5;
+}
+
+.btn-2 {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  transition: all 0.3s;
+}
+
+.btn-2:hover {
+  background-color: var(--primary-color);
+  color: var(--bg-white);
 }

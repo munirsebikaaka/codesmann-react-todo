@@ -91,28 +91,38 @@ function App() {
 }
 function Form({ onTodo, onSetTodo, onPushToNewTodos }) {
   return (
-    <form onSubmit={onPushToNewTodos}>
+    <div>
       <h1>todo new version</h1>
-      <input
-        type="text"
-        value={onTodo}
-        onChange={(e) => onSetTodo(e.target.value)}
-      />
-      <button>ADD</button>
-    </form>
+
+      <form className="todo-form" onSubmit={onPushToNewTodos}>
+        <input
+          className="type-input"
+          type="text"
+          value={onTodo}
+          onChange={(e) => onSetTodo(e.target.value)}
+        />
+        <button className="btn todobtn">ADD</button>
+      </form>
+    </div>
   );
 }
 
 function NewTasks({ onTodoNew, onPushToComplete, onPushToCancelledFromNew }) {
   return (
-    <div>
-      <h1>new todos</h1>
+    <div className="level-cell">
+      <h1 className="heading heading-1">new todos</h1>
       <ul>
         {onTodoNew.map((el) => (
           <li key={el.id}>
             {el.task}
-            <button onClick={onPushToComplete}>{el.addB}</button>
-            <button onClick={onPushToCancelledFromNew}>{el.remB}</button>
+            <div>
+              <button className="btn btn-1" onClick={onPushToComplete}>
+                {el.addB}
+              </button>
+              <button className="btn btn-2" onClick={onPushToCancelledFromNew}>
+                {el.remB}
+              </button>
+            </div>
           </li>
         ))}
       </ul>
@@ -121,14 +131,20 @@ function NewTasks({ onTodoNew, onPushToComplete, onPushToCancelledFromNew }) {
 }
 function CompleteTasks({ onCompleteTask, onPushToCancelled }) {
   return (
-    <div>
-      <h1>complete todos</h1>
+    <div className="level-cell">
+      <h1 className="heading heading-2">complete todos</h1>
       <ul>
         {onCompleteTask.map((el) => (
           <li key={el.task}>
             {el.task}
-            <button onClick={onPushToCancelled}>{el.addB}</button>
-            <button onClick={onPushToCancelled}>{el.remB}</button>
+            <div>
+              <button className="btn btn-1" onClick={onPushToCancelled}>
+                {el.addB}
+              </button>
+              <button className="btn btn-2" onClick={onPushToCancelled}>
+                {el.remB}
+              </button>
+            </div>
           </li>
         ))}
       </ul>
@@ -137,14 +153,20 @@ function CompleteTasks({ onCompleteTask, onPushToCancelled }) {
 }
 function CancelledTodos({ onCancelled, onRedoTodo, onDeleteTodo }) {
   return (
-    <div>
-      <h1>Cancelled todos</h1>
+    <div className="level-cell">
+      <h1 className="heading heading-3">Cancelled todos</h1>
       <ul>
         {onCancelled.map((el) => (
           <li key={el.task}>
             {el.task}
-            <button onClick={onRedoTodo}>{el.addB}</button>
-            <button onClick={onDeleteTodo}>{el.remB}</button>
+            <div>
+              <button className="btn btn-1" onClick={onRedoTodo}>
+                {el.addB}
+              </button>
+              <button className="btn btn-2" onClick={onDeleteTodo}>
+                {el.remB}
+              </button>
+            </div>
           </li>
         ))}
       </ul>
