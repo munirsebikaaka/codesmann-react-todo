@@ -26,20 +26,25 @@
   display: flex;
   justify-content: space-between;
 }
+.form-head {
+  font-size: 2rem;
+  text-transform: capitalize;
+  font-family: sans-serif;
+  font-weight: 500;
+  margin-left: 2px;
+  margin-bottom: -1px;
+}
 .todo-form {
   width: 100%;
   display: flex;
   gap: 12px;
   align-items: center;
-  border: 1px solid red;
 }
 .type-input {
   width: 100%;
-  /* display: inline-block; */
   border: 1px solid #eeeded;
-  font-size: 0.8rem;
-  /* text-align: center;
-     */
+  font-size: 1.4rem;
+
   padding: 12px;
   border-radius: 6px;
 }
@@ -85,9 +90,23 @@ li {
   align-items: center;
   background-color: #f5f5f5;
   padding: 10px;
-  margin-right: 50px;
+  margin-left: -37px;
   margin-bottom: 10px;
   border-radius: 12px;
+  font-size: 1.8rem;
+  font-family: sans-serif;
+  font-weight: 500;
+}
+.default {
+  background-color: #f5f5f5;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  font-size: 1.4rem;
+  font-family: sans-serif;
+  font-weight: 500;
+  text-transform: capitalize;
+  text-align: center;
 }
 li div {
   display: flex;
@@ -99,6 +118,9 @@ li div {
     var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
   padding: 20px;
   width: 100%;
+  /* display: flex;
+  flex-direction: column;
+  align-items: center; */
 }
 .btn {
   display: inline-block;
