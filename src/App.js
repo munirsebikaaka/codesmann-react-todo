@@ -50,7 +50,7 @@ function App() {
     setTodoCancelled(() =>
       todoCancelled.map((el) => {
         const index = todoCancelled.indexOf(el);
-        todoCancelled.splice(index);
+        todoCancelled.splice(index, 1);
         todoNew.push(el);
       })
     );
