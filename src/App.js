@@ -6,7 +6,7 @@ function App() {
   const [todo, setTodo] = useState("");
   const [todoNew, setTodoNew] = useState([]);
   const [todoComplete, setTodoComplete] = useState([]);
-  const [todoCancelled, setTodoCancelled] = useState([]);
+  let [todoCancelled, setTodoCancelled] = useState([]);
   function hundleTodosInFormComponet(e) {
     e.preventDefault();
     todoNew.push({
@@ -18,50 +18,44 @@ function App() {
     });
     setTodo("");
   }
-  function pushToCancelledFromNew() {
-    setTodoNew(() =>
-      todoNew.map((el) => {
-        const index = todoNew.indexOf(el);
-        todoNew.splice(index);
-        todoCancelled.push(el);
-      })
-    );
+  const todoMovementFunctionallityCell = (id, arr, setArr, pushTo) => {
+    const [todo] = arr.filter((todo) => todo.id === id);
+    if (todo) {
+      setArr((arr = arr.filter((todo) => todo.id !== id)));
+      pushTo.push(todo);
+    }
+    return arr;
+  };
+  function pushToCancelledFromNew(id) {
+    todoMovementFunctionallityCell(id, todoNew, setTodoNew, todoCancelled);
   }
-  function pushToComplete() {
-    setTodoNew(() =>
-      todoNew.map((el) => {
-        const index = todoNew.indexOf(el);
-        todoNew.splice(index);
-        todoComplete.push(el);
-      })
-    );
+  function pushToComplete(id) {
+    todoMovementFunctionallityCell(id, todoNew, setTodoNew, todoComplete);
   }
 
-  function pushToCancelled() {
-    setTodoComplete(() =>
-      todoComplete.map((el) => {
-        const index = todoComplete.indexOf(el);
-        todoComplete.splice(index);
-        todoCancelled.push(el);
-      })
+  function pushToCancelled(id) {
+    todoMovementFunctionallityCell(
+      id,
+      todoComplete,
+      setTodoComplete,
+      todoCancelled
     );
   }
-  function redoTodo() {
-    setTodoCancelled(() =>
-      todoCancelled.map((el) => {
-        const index = todoCancelled.indexOf(el);
-        todoCancelled.splice(index, 1);
-        todoNew.push(el);
-      })
+  function redoTodo(id) {
+    todoMovementFunctionallityCell(
+      id,
+      todoCancelled,
+      setTodoCancelled,
+      todoNew
     );
   }
-  function deleteTodo() {
-    setTodoCancelled(() =>
-      todoCancelled.map((el) => {
-        const index = todoCancelled.indexOf(el);
-        todoCancelled.splice(index);
-      })
-    );
+  function deleteTodo(id) {
+    const todo = todoCancelled.filter((el) => el.id === id);
+    if (todo) {
+      setTodoCancelled(
+        (todoCancelled = todoCancelled.filter((el) => el.id !== id))
+      );
+    }
   }
   return (
     <div>
@@ -118,12 +112,15 @@ function NewTasks({ onTodoNew, onPushToComplete, onPushToCancelledFromNew }) {
             <li key={el.id}>
               {el.task}
               <div>
-                <button className="btn btn-1" onClick={onPushToComplete}>
+                <button
+                  className="btn btn-1"
+                  onClick={() => onPushToComplete(el.id)}
+                >
                   {el.addB}
                 </button>
                 <button
                   className="btn btn-2"
-                  onClick={onPushToCancelledFromNew}
+                  onClick={() => onPushToCancelledFromNew(el.id)}
                 >
                   {el.remB}
                 </button>
@@ -147,10 +144,16 @@ function CompleteTasks({ onCompleteTask, onPushToCancelled }) {
             <li key={el.task}>
               {el.task}
               <div>
-                <button className="btn btn-1" onClick={onPushToCancelled}>
+                <button
+                  className="btn btn-1"
+                  onClick={() => onPushToCancelled(el.id)}
+                >
                   {el.addB}
                 </button>
-                <button className="btn btn-2" onClick={onPushToCancelled}>
+                <button
+                  className="btn btn-2"
+                  onClick={() => onPushToCancelled(el.id)}
+                >
                   {el.remB}
                 </button>
               </div>
@@ -173,10 +176,13 @@ function CancelledTodos({ onCancelled, onRedoTodo, onDeleteTodo }) {
             <li key={el.task}>
               {el.task}
               <div>
-                <button className="btn btn-1" onClick={onRedoTodo}>
+                <button className="btn btn-1" onClick={() => onRedoTodo(el.id)}>
                   {el.addB}
                 </button>
-                <button className="btn btn-2" onClick={onDeleteTodo}>
+                <button
+                  className="btn btn-2"
+                  onClick={() => onDeleteTodo(el.id)}
+                >
                   {el.remB}
                 </button>
               </div>
