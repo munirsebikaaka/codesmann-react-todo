@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useAplyFocus } from "./useCustom";
 /*
 
 */
@@ -7,6 +8,7 @@ function App() {
   const [todoNew, setTodoNew] = useState([]);
   const [todoComplete, setTodoComplete] = useState([]);
   let [todoCancelled, setTodoCancelled] = useState([]);
+  let countFishedTasks = useRef(0);
   function hundleTodosInFormComponet(e) {
     e.preventDefault();
     todoNew.push({
@@ -30,6 +32,8 @@ function App() {
     todoMovementFunctionallityCell(id, todoNew, setTodoNew, todoCancelled);
   }
   function pushToComplete(id) {
+    countFishedTasks.current = countFishedTasks.current + 1;
+    console.log(countFishedTasks.current);
     todoMovementFunctionallityCell(id, todoNew, setTodoNew, todoComplete);
   }
 
@@ -83,7 +87,10 @@ function App() {
     </div>
   );
 }
+
 function Form({ onTodo, onSetTodo, onPushToNewTodos }) {
+  const input = useRef(null);
+  useAplyFocus(input);
   return (
     <div>
       <h1 className="form-head">the react todo App</h1>
@@ -95,6 +102,7 @@ function Form({ onTodo, onSetTodo, onPushToNewTodos }) {
           placeholder="Please input your todo."
           value={onTodo}
           onChange={(e) => onSetTodo(e.target.value)}
+          ref={input}
         />
         <button className="btn todobtn">ADD</button>
       </form>
